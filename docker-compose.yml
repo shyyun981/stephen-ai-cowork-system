@@ -1,0 +1,31 @@
+services:
+  cowork:
+    build: .
+    image: stephen-ai-cowork:latest
+    container_name: cowork
+    env_file:
+      - .env
+    volumes:
+      - ./data:/app/data
+      - ./outputs:/app/outputs
+      - ./reports:/app/reports
+      - ./notebooks:/app/notebooks
+    working_dir: /app
+    command: ["cowork", "--help"]
+
+  jupyter:
+    build: .
+    image: stephen-ai-cowork:latest
+    container_name: cowork-jupyter
+    env_file:
+      - .env
+    ports:
+      - "8888:8888"
+    volumes:
+      - ./:/app
+    working_dir: /app
+    command: >
+      bash -lc "pip install jupyterlab && jupyter lab
+      --ip=0.0.0.0 --port=8888 --no-browser
+      --ServerApp.token='' --ServerApp.password=''
+      --ServerApp.root_dir=/app"
